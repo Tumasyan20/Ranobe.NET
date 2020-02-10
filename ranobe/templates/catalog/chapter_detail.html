@@ -1,0 +1,74 @@
+{% extends tmp %}
+
+
+{% block content %}
+	<div class="book-block">
+		<h3 class="text-secondary"><b>Глава {{ chapter.number }}: </b>{{ chapter.title }}</h3><br>
+		<div class="text-secondary">{{ chapter.content|linebreaks }}</div>
+	</div>
+	<div class="book-block">
+		<div class="d-flex justify-content-between">
+		{% if prev_chapter %}
+			<div>
+				<a href="{{ prev_chapter.get_absolute_url }}"><button type="button" class="btn btn-outline-secondary">Предыдущая глава</button></a>
+			</div>
+		{% else %}
+			<div>
+				<button type="button" class="btn btn-outline-secondary" disabled>Предыдущая глава</button>
+			</div>
+		{% endif %}
+		<div>
+			<a href="{{ chapter.book.get_absolute_url }}"><button type="button" class="btn btn-primary">Оглавление</button></a>
+		</div>
+		{% if next_chapter %}
+			<div>
+				<a href="{{ next_chapter.get_absolute_url }}"><button type="button" class="btn btn-outline-secondary">Следующая глава</button></a>
+			</div>
+		{% else %}
+			<div>
+			<button type="button" class="btn btn-outline-secondary" disabled>Следующая глава</button>
+		</div>
+		{% endif %}
+		
+	</div>
+	</div>
+	<div class="book-block">
+		{% if comments %}
+			{% for comment in comments %}
+				<div class="media">
+					<img src="{{ comment.commentator.userprofile.avatar.url }}" class="mr-3" alt="User avatar" width="60px;">
+					<div class="media-body text-secondary">
+						<h5 class="mt-0">{{ comment.commentator.username }}</h5>
+						{{ comment.content }}
+					</div>
+				</div>
+				{% if not forloop.last %}
+					<hr>
+				{% endif %}
+			{% endfor %}
+		{% else %}
+			<p class="text-secondary" style="text-align: center;">У данный главы пока что нету комментариев.</p>
+		{% endif %}
+	</div>
+	<div class="book-block">
+		<form>
+			<div class="form-group">
+  				<label for="comment" class="text-secondary">Коментарий:</label>
+				<textarea class="form-control" rows="5" id="comment"></textarea>
+			</div>
+			<input type="submit" value="Добавить" class="btn btn-outline-light">
+		</form>
+	</div>
+{% endblock %}
+{% block sidebar %}
+	<aside>
+		<h3 class="text-secondary">Панель инструментов</h3>
+		<hr>
+		<form>
+			<div class="form-group">
+				<label for="font-size" class="text-secondary">Ращмер шрифта:</label>
+				<input type="number" id="font-size" class="form-control" value="16">
+			</div>
+		</form>
+	</aside>
+{% endblock %}

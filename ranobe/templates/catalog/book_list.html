@@ -1,0 +1,88 @@
+{% extends tmp %}
+
+{% block content %}
+	<div class="main-block">
+		<div class="update-header">
+			<div class="input-group mb-3">
+				<input type="text" class="form-control" placeholder="Поиск...">
+				<div class="input-group-append">
+					<button class="btn btn-success" type="submit"><i class="fas fa-search"></i></button>  
+				</div>
+			</div>
+		</div>
+		{% for book in books %}
+		<div class="book-block">
+			<div class="row">
+				<div class="col-md-3">
+					<a href="{{ book.get_absolute_url }}"><img src="{{ book.image.url }}" alt="book image" width="200px" class="align-self-center mr-3 img-fluid"></a>
+				</div>
+				<div class="col-md-9">
+					<a href="{{ book.get_absolute_url }}" class="text-secondary"><h4 class="text-secondary">{{ book.title }} | <small><i>Оценка: {{ book.book_rating }}</i></small></h4></a>
+					<p class="text-secondary"><b>Автор:</b> <i>{{ book.author.nickname }}</i></p>
+					<p class="text-secondary"><b>Жанры:</b> <i>
+						{% for genre in book.genre.all %}
+							<a href="#" class="text-secondary">{{ genre.name }}{% if not forloop.last %}, {% endif %}</a>
+						{% endfor %}
+					</i></p>
+					<p class="text-secondary"><b>Страна:</b> <i>{{ book.country }}</i></p>
+					<p class="text-secondary"><b>Дата публикации:</b> <i>{{ book.pub_date }}</i></p>
+					<p class="text-secondary"><b>Количество глав:</b> {{book.chapter_set.count}}</p>
+				</div>
+			</div>
+		</div>
+		<hr>
+		{% endfor %}
+	</div>
+	{% if books.has_other_pages %}
+		<div class="page-pagination">
+			<ul class="pagination justify-content-center">
+				{% if books.has_previous %}
+					<li class="page-item"><a  class="page-link {% if user.userprofile.theme == 'd' %} bg-dark text-secondary {% endif %} " href="?page={{ books.previous_page_number }}">Предыдущая</a></li>
+				{% else %}
+					<li class=" page-item disabled"><a class="page-link {% if user.userprofile.theme == 'd' %} text-secondary bg-dark {% endif %} disabled" href="?page={{ book.previous_page_number }}">Предыдущая</a></li>
+				{% endif %}
+				{% for i in books.paginator.page_range %}
+					{% if books.number == i %}
+						<li class="page-item active"><a class="page-link {% if user.userprofile.theme == 'd' %} text-secondary bg-dark {% endif %} disabled">{{ i }} </a></li>
+					{% else %}
+						<li class="page-item"><a class="page-link {% if user.userprofile.theme == 'd' %} text-secondary bg-dark {% endif %}" href="?page={{ i }}">{{ i }}</a></li>
+					{% endif %}
+				{% endfor %}
+				{% if books.has_next %}
+					<li class="page-item"><a class="page-link {% if user.userprofile.theme == 'd' %} text-secondary bg-dark {% endif %} disabled" href="?page={{ books.next_page_number }}">Следующая</a></li>
+				{% else %}
+					<li class="page-item disabled"><a href="#" class="page-link {% if user.userprofile.theme == 'd' %} bg-dark text-secondary {% endif %} disabled">Следующая</a></li>
+				{% endif %}
+			</ul>
+		</div>
+	{% endif %}
+{% endblock %}
+{% block sidebar %}
+	{% if user.is_authenticated %}
+		<aside>
+			<h3 class="text-secondary">Профиль</h3>
+			<hr>
+			<center>
+				<img src="{{ user.userprofile.avatar.url }}" alt="User avatar" width="150px;" style="margin-bottom: 10px;">
+				<h4 class="text-secondary">{{ user.username }} | {{ user.userprofile.balacne }} <i class="far fa-gem"></i></h4>
+			</center>
+			<hr>
+			{% if user.is_staff %}
+				<p class="text-secondary"><b>Права:</b> {{ user.groups.all.0  }}</p>
+			{% endif %}
+			<p class="text-secondary"><b>Дата регистрации:</b> <i>{{ user.date_joined }}</i></p>
+			<p class="text-secondary"><b>Количество прочитанных книг:</b> <i>{{ readed_book_count }}</i></p>
+			<button class="btn btn-success">Профиль</button>
+			{% if user.is_superuser or user.is_staff %}
+				<a href="/admin"><button class="btn btn-danger"><i class="fas fa-dragon"></i> Админ</button></a>
+			{% endif %}
+		</aside>
+	{% endif %}
+	<aside>
+		<h3 class="text-secondary">Жанры</h3>
+		<hr>
+		{% for genre in genres %}
+			<p style="text-align: left; font-size: 16px; padding-left: 30px"><a href="#" class="text-secondary"><b>{{ genre.name }}</b> <i>( {{ genre.book_set.all.count }} {% if genre.book_set.all.count == 1 %} книга {% elif genre.book_set.all.count == 2 %} книги {% else %} книг {% endif %})</i></a></p>
+		{% endfor %}
+	</aside>
+{% endblock %}

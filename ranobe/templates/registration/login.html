@@ -1,0 +1,55 @@
+{% extends "light_template.html" %}
+
+{% block main_content %}
+<div class="container">
+			<div class="main-content">
+				<div class="row">
+					<div class="col-md-9">
+						<div class="content">
+							<div class="login-content">
+								<center>
+									<div class="login-block">
+										{% if form.errors %}
+											<p class="text-danger">Ваш Логин или Пароль не найдены. Пожалуйста попытайтесь снова!</p>
+										{% endif %}
+										{% if user.is_authenticated %}
+											<p>Вы уже вошли в систему:</p>
+											<a href="{% url 'main-page' %}">Перейти на главную страницу</a>
+										{% else %}
+											<p>
+												<form action="{% url 'login' %}" method="post">
+													{% csrf_token %}
+													<div class="form-group">
+														<label for="username">Имя пользователья։</label>
+														<input type="text" class="form-control" id="username" name="username" >
+													</div>
+													<div class="form-group">
+														<label for="password">Пароль։</label>
+														<input type="password" class="form-control" id="password" name="password">
+													</div>
+
+													<input type="submit" value="Войти" class="btn btn-primary">
+													<input type="hidden" name="next" value="{{ next }}">
+												</form>
+											</p>
+										{% endif %}
+									</div>
+								</center>
+							</div>	
+						</div>
+					</div>
+					<div class="col-md-3">
+						<aside>
+							<a href="#"><button class="btn btn-dark btn-block">Регистрация</button></a>
+						</aside>
+						<aside>
+							<a href=""><button class="btn btn-danger btn-block">Восстановить пароль</button></a>
+						</aside>
+						<aside>
+							<a href="#"><button class="btn btn-success btn-block">Поддержка</button></a>
+						</aside>
+					</div>
+				</div>
+			</div>
+		</div>
+{% endblock %}

@@ -1,0 +1,107 @@
+html {
+	position: relative;
+	min-height: 100%;
+}
+
+body {
+	background-image: url(/media/images/background/bg.jpg);
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	opacity: 0.9;
+}
+
+
+
+.main-content {
+	padding-top: 50px;
+	min-height: 100%;
+	padding-bottom: 300px;
+}
+
+.main-block {
+	background: #343a40;
+}
+
+.top_last_updates {
+	background: #343a40;
+	padding: 15px;
+}
+
+.book-title {
+	text-align: center;
+	margin-top: 5px;
+}
+
+.update-header {
+	padding: 10px;
+	background: #343a40;
+}
+
+.book-block {
+	background: #343a40;
+	padding: 15px;
+	margin-bottom: 15px;
+}
+
+.book-last-update {
+	text-align: center;
+	margin-top: 50px;
+}
+
+.chapters {
+	background: #272727;
+	width: 100%;
+	border: 15px solid #343a40;
+	padding: 15px;
+}
+
+.chapter {
+	background: #343a40;
+	padding: 10px;
+}
+
+.updated-books {
+	margin-bottom: 30px;
+}
+
+.page-pagination {
+	margin-top: 10px;
+	background: #343a40;
+	padding-top: 10px;
+	padding-bottom: 5px; 
+}
+
+aside {
+	background: #343a40;
+	margin-bottom: 10px;
+	padding: 15px;
+}
+
+aside h3 {
+	text-align: center;
+	margin-bottom: 10px;
+}
+
+.last-review {
+	border-top: 2px solid #272727;
+	margin-bottom: 10px;
+	padding-top: 10px;
+}
+
+footer {
+	width: 100%;
+	background: #272727;
+	margin-top: 50px;
+	padding: 15px;
+	position: absolute;
+	bottom: 0;
+}
+
+.footer-nav {
+	list-style-type: none;
+}
+
+.footer-nav li{
+	padding: 10px;
+	font-weight: bold;
+}

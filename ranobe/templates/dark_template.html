@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	{% block title %} <title>Ranobe</title> {% endblock %}
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+	<script src="https://kit.fontawesome.com/e31d514b92.js" crossorigin="anonymous"></script>
+	{% block head %}
+	{% endblock %}
+	{% load static %}
+	<link rel="stylesheet" href="{% static 'css/dark_style.css' %}">
+</head>
+<body>
+	{% block header_navigation %}
+		<nav class="navbar navbar-expand-md bg-dark navbar-dark shadow-sm">
+			<div class="container">
+				<a class="navbar-brand" href="{% url 'main-page' %}">Ranobe.NET</a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsivleNavbar">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="collapsivleNavbar">
+					<ul class="navbar-nav mr-auto">
+						<li class="nav-item">
+							<a href="{% url 'books' %}" class="nav-link">Все книги</a>
+						</li>
+						<li class="nav-item">
+							<a href="#" class="nav-link">Рейтинг книг</a>
+						</li>
+						<li class="nav-item">
+							<a href="#" class="nav-link">Новости проекта</a>
+						</li>
+					</ul>
+					<ul class="navbar-nav">
+						{% if user.is_authenticated %}
+							<li class="navbar-item">
+								{% load static %}
+								<img src='{{ user.userprofile.avatar.url}}' alt="user-avatar" width="40px" height="40px" style="border-radius: 50%">
+							</li>
+							<li class="nav-item dropdown">
+								<a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+									{{ user.get_username }}
+								</a>
+								<div class="dropdown-menu bg-dark navbar-light">
+									{% if perms.superuser %}
+										<a href="/admin" class="dropdown-item text-danger"><b>ADMIN</b></a>
+									{% elif user.is_staff %}
+										<a href="/admin" class="dropdown-item text-danger"><b>ADMIN</b></a>
+									{% endif %}
+									<a class="dropdown-item text-secondary" href="#">Профиль</a>
+									<a class="dropdown-item text-secondary" href="#">Настройки</a>
+									<div class="dropdown-divider"></div>
+									<a class="dropdown-item text-secondary" href="{% url 'logout' %}?next={{ request.path }}">Выход</a>
+								</div>
+							</li>
+						{% else %}
+							<li class="navbar-item">
+								<a href="#" class="nav-link">Войти</a>
+							</li>
+							<li class="navbar-item">
+								<a href="#" class="nav-link">Регистрация</a>
+							</li>
+						{% endif %}
+					</ul>
+				</div>
+			</div>
+		</nav>
+	{% endblock %}
+
+	{% block main_content %}
+		<div class="container">
+			<div class="main-content">
+				<div class="row">
+					<div class="col-md-8">
+						<div class="content">
+							{% block content %}content{% endblock %}
+						</div>
+					</div>
+					<div class="col-md-4">
+						{% block sidebar %}
+							sidebar
+						{% endblock %}
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endblock %}
+
+	
+	{% block footer %}
+		<footer>
+			<div class="container">
+				<ul class="footer-nav">
+					<li>
+						<a href="{% url 'books' %}" class="text-secondary">Все книги</a>
+					</li>
+					<li>
+						<a href="#" class="text-secondary">Рейтинг книг</a>
+					</li>
+					<li>
+						<a href="#" class="text-secondary">Новости проекта</a>
+					</li>
+				</ul>
+			</div>
+		</footer>
+	{% endblock %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

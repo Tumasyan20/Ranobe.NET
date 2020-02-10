@@ -1,0 +1,150 @@
+{% extends tmp %}
+
+{% block main_content %}
+
+	<div class="main-content">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-8">
+					<div class="main-block" style="padding: 15px;">
+						<div class="row" class="bg-dark">
+							<div class="col-md-4">
+								<img src="{{ book.0.image.url }}" alt="book image" width="100%">
+							</div>
+							<div class="col-md-8">
+								<h3 class="text-danger"><i>{{ book.0.title }}</i></h3>
+								<p class="text-secondary"><b>Оцнека:</b> <i>{{book.0.book_rating}}</i> </p>
+								<p class="text-secondary"><b>Автор:</b> <i>{{ book.0.author.nickname }}</i></p>
+								<p class="text-secondary">
+									<b>Жанры։</b> 
+									<i>
+										{% for genre in book.0.genre.all %}
+											<a href="" class="text-secondary">{{ genre.name }}{% if not forloop.last %}, {% endif %}</a>
+											
+										{% endfor %}
+									</i>
+								</p>
+								<p class="text-secondary"><b>Дата буликации:</b> <i>{{ book.0.pub_date }}</i></p>
+								<p class="text-secondary"><b>Количество глав:</b> <i>{{ book.0.chapter_set.count }}</i></p>
+							</div>
+						</div>
+					</div>
+					<br>
+					<div class="main-block" style="padding: 15px;">
+						<h5 class="text-secondary">Описание</h5>
+						<hr>
+						<p class="text-secondary">{{ book.0.summary }}</p>
+					</div>
+					<br>
+					<div class="main-block" style="padding: 15px; margin-bottom: 0">
+						<h5 class="text-secondary">Главы</h5>
+						<hr>
+					</div>
+					<div class="chapters">
+						{% for chapter in chapters %}
+							<div class="chapter">
+								<div class="d-flex justify-content-between">
+									<div><a href="{{ chapter.get_absolute_url }}" class="text-secondary">{% if chapter.number is not null %} <b>Глава: {{ chapter.number }}</b> | {% endif %} <i> {{ chapter.title }}</i></a></div>
+									<div class="{% if chapter.was_published_recently %} text-success {% else %} text-secondary {% endif %}">{{ chapter.pub_date }}</div>
+								</div>
+							</div>
+							{% if not forloop.last %}
+								<br>
+							{% endif %}
+						{% endfor %}
+					</div>
+					{% if chapters.has_other_pages %}
+						<div class="page-pagination justify-content-center">
+							<ul class="pagination justify-content-center">
+								{% if chapters.has_previous %}
+									<li class="page-item"><a  class="page-link {% if user.userprofile.theme == 'd' %} bg-dark text-secondary {% endif %} " href="?page={{ chapters.previous_page_number }}">Предыдущая</a></li>
+								{% else %}
+									<li class=" page-item disabled"><a class="page-link {% if user.userprofile.theme == 'd' %} text-secondary bg-dark {% endif %} disabled" href="?page={{ book.previous_page_number }}">Предыдущая</a></li>
+								{% endif %}
+								{% for i in chapters.paginator.page_range %}
+									{% if chapters.number == i %}
+										<li class="page-item active"><a class="page-link {% if user.userprofile.theme == 'd' %} text-secondary bg-dark {% endif %} disabled">{{ i }} </a></li>
+									{% else %}
+										<li class="page-item"><a class="page-link {% if user.userprofile.theme == 'd' %} text-secondary bg-dark {% endif %}" href="?page={{ i }}">{{ i }}</a></li>
+									{% endif %}
+								{% endfor %}
+								{% if chapters.has_next %}
+									<li class="page-item"><a class="page-link {% if user.userprofile.theme == 'd' %} text-secondary bg-dark {% endif %} disabled" href="?page={{ chapters.next_page_number }}">Следующая</a></li>
+								{% else %}
+									<li class="page-item disabled"><a href="#" class="page-link {% if user.userprofile.theme == 'd' %} bg-dark text-secondary {% endif %} disabled">Следующая</a></li>
+								{% endif %}
+							</ul>
+						</div>
+					{% endif %}
+				</div>
+				<div class="col-md-4">
+					<aside>
+						<h4 class="text-secondary" style="text-align: center;">Информация о книге</h3><hr>
+						<p class="text-secondary"><b>Опубликовал։</b> <i>{{ book.0.publisher.username }}</i></p>
+						<p class="text-secondary"><b>Средняя цена глав:</b> <i>{{ chapter_a_price }} <i class="far fa-gem"></i></i></p>
+						<p class="text-secondary"><b>Количество рецензий:</b> <i>{{ book.0.review_set.count }}</i></p>
+						{% if user.id == book.0.publisher.id or user.is_stuff or user.is_superuser %}
+							<hr>
+							<div class="d-flex justify-content-between">
+								<div>
+									<button class="btn btn-xs btn-danger">Удалить</button>
+								</div>
+								<div>
+									<button class="btn btn-xs btn-primary">Изменить</button>
+								</div>
+								<div>
+									<button class="btn btn-xs btn-success">Обновить</button>
+								</div>
+							</div>
+						{% endif %}
+					</aside>
+					<aside>
+						<h4 class="text-secondary" style="text-align: center;">Последние рецензии</h4>
+							<hr>
+							{% if not lasted_reviews %}
+								<p class="text-secondary" align="center">У данной книги нету рецензий</p>
+								<hr>
+							{% else %}
+								{% for review in lasted_reviews %}
+									<div class="media p-3">
+										<div class="media-body">
+											<h5 class="text-danger">{{ review.author.username }} <small class="text-primary"><i>( {{ review.pub_date }} )</i></small></h5>
+											<p class="text-secondary">{{ review.title }}</p>
+											<div class="d-flex justify-content-between">
+												<div class="text-secondary"><b>Оценка: <span class="text-primary">{{ review.rating }}</span></b></div>
+												<div><a href="#" class="text-secondary">Подробнее</a></div>
+											</div>
+										</div>
+									</div>
+									<hr>
+								{% endfor %}
+							{% endif %}
+							<div class="d-flex justify-content-between">
+								<div class="text-secondary"><a href="#" class="text-secondary">Все рецензии</a></div>
+								<div><a href="#" class="text-secondary">Добавить рецензию</a></div>
+							</div>
+					</aside>
+					<aside>
+						<h4 class="text-secondary" style="text-align: center;">Последние коментарии</h4><hr>
+						{% if not last_comments %}
+							<p class="text-secondary" align="center">У глав данной книги нету комментариев</p>
+						{% else %}
+							{% for comment in last_comments %}
+								<div class="media p-3">
+									<div class="media-body">
+										<h5 class="text-danger">{{ comment.commentator.username }} <small class="text-primary"><i>( {{ comment.pub_date }}</i> )</small></h5>
+										<p class="text-secondary">{{ comment.content }}</p>
+										<p class="text-secondary"><b>Коментарий к:</b>{% if comment.chapter.number is not null %} <span class="text-primary">глава - {{ comment.chapter.number }}</span> {% else %} <i> {{ comment.chapter.title }} {% endif %}</p>
+									</div>
+								</div>
+								{% if not forloop.last %}
+									<hr>
+								{% endif %}
+							{% endfor %}
+						{% endif %}
+					</aside>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

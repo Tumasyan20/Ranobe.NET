@@ -1,0 +1,98 @@
+{% extends tmp %}
+
+{% block content %}
+	<h3 class="text-danger update-header" style="text-align: center; padding: 15px; margin-top: 0">Последние обновленные популярные книги:</h3>
+	<div class="top_last_updates">
+		<div class="row">
+			{% for book in last_updated_top_books %}
+				<div class="col-md-3">
+					<a href="{{ book.get_absolute_url }}"><img src="{{ book.image.url }}" alt="book image" width="100%"></a>
+					<p class="book-title text-secondary"><a href="{{ book.get_absolute_url }}" class="text-secondary">{{ book.title }}</a></p>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+	<h3 class="text-secondary update-header" style="margin-top: 10px;">Последние обновления:</h3>
+	<div class="updated-books">
+		{% for book in last_updated_books %}
+			<div class="book-block">
+				<div class="row">
+					<div class="col-md-4">
+						<a href="{{ book.get_absolute_url }}"><img src="{{ book.image.url }}" alt="book image" width="200px;" class="img-fluid"></a>
+					</div>
+					<div class="col-md-8">
+						<a href="{{ book.get_absolute_url }}" class="text-secondary"><h4 class="text-secondary">{{ book.title }} | <small><i>Оценка: {{ book.book_rating }}</i></small></h4></a>
+						<p class="text-secondary"><b>Автор:</b> <i>{{ book.author.nickname }}</i></p>
+						<p class="text-secondary"><b>Жанры:</b> <i>
+							{% for genre in book.genre.all %}
+								<a href="#" class="text-secondary">{{ genre.name }}{% if not forloop.last %}, {% endif %}</a>
+							{% endfor %}
+						</i></p>
+						<p class="text-secondary"><b>Страна:</b> <i>{{ book.country }}</i></p>
+						<p class="text-secondary"><b>Дата публикации:</b> <i>{{ book.pub_date }}</i></p>
+						<p class="text-secondary"><b>Количество глав:</b> {{book.chapter_set.count}}</p>
+						<h4 class="book-last-update text-danger">
+							{% if book.get_last_chapter.0.number is not null %}
+								<b>Глава: {{ book.get_last_chapter.0.number }}: </b>{{ book.get_last_chapter.0.title }} 
+							{% else %}
+								{{ book.get_last_chapter.0.title }} 
+							{% endif %}
+						</h4>
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+		<center>
+			<a href="{% url 'books' %}"><button class="btn {% if user.userprofile.theme == 'd' %} btn-dark {% else %} btn-light {% endif %} btn-block">Все книги</button></a>
+		</center>
+	</div>
+{% endblock %}
+{% block sidebar %}
+	{% if user.is_authenticated %}
+		<aside>
+			<h3 class="text-secondary">Профиль</h3>
+			<hr>
+			<center>
+				<img src="{{ user.userprofile.avatar.url }}" alt="User avatar" width="150px;" style="margin-bottom: 10px;">
+				<h4 class="text-secondary">{{ user.username }} | {{ user.userprofile.balacne }} <i class="far fa-gem"></i></h4>
+			</center>
+			<hr>
+			{% if user.is_staff %}
+				<p class="text-secondary"><b>Права:</b> {{ user.groups.all.0  }}</p>
+			{% endif %}
+			<p class="text-secondary"><b>Дата регистрации:</b> <i>{{ user.date_joined }}</i></p>
+			<p class="text-secondary"><b>Количество прочитанных книг:</b> <i>{{ readed_book_count }}</i></p>
+			<button class="btn btn-success">Профиль</button>
+			{% if user.is_superuser or user.is_staff %}
+				<a href="/admin"><button class="btn btn-danger"><i class="fas fa-dragon"></i> Админ</button></a>
+			{% endif %}
+		</aside>
+	{% endif %}
+	<aside>
+		<h3  class="text-secondary">Топ 10 книг:</h3>
+		<hr>
+		<ol>
+			{% for book in top_books %}
+				<li  class="text-secondary" >{{ book.title }}</li>
+			{% endfor %}
+		</ol>
+	</aside>
+	<aside>
+		<h3 class="text-secondary" >Последние рецензии:</h3>
+		<hr>
+		{% for review in lasted_reviews %}
+			<div class="media p-3">
+				<!-- <img src="{{ review.author.userprofile.avatar.url }}" alt="Review author avatar" class="mr-3 mt-3 rounded-circle" width="60px" height="60px"> -->
+				<div class="media-body">
+					<h5 class="text-secondary"><b>{{ review.book.title }}</b></h5>
+					<h5 class="text-secondary">{{ review.author.username }} <small><i>{{ review.pub_date }}</i></small></h5>
+					<p class="text-secondary">{{ review.title }}</p>
+					<p class="text-secondary"><b>Оценка: {{ review.rating }}</b></p>
+				</div>
+			</div>
+			{% if not forloop.last %}
+				<hr>
+			{% endif %}
+		{% endfor %}
+	</aside>
+{% endblock %}
