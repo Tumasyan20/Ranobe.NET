@@ -66,6 +66,20 @@ body {
 	padding: 10px;
 }
 
+.profile-tab-button {
+	border-left: 3px solid #6c757d;
+	padding: 10px;
+	height: 100%;
+	width: 100%;
+	cursor: pointer;
+	text-align: center;
+}
+
+.edit-profile {
+	background: none;
+	border: none;
+}
+
 aside {
 	background: #fff;
 	padding: 15px;

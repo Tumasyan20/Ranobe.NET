@@ -37,11 +37,12 @@ def Book_list(request):
 	return render(
 		request,
 		'catalog/book_list.html',
-		context = { 'tmp' 					: tmp, 
-					'book_list' 			: book_list, 
-					'books' 				: books, 
-					'readed_book_count' 	: readed_book_count, 
-					'genres' 				: genres,
+		context = { 
+				'tmp' 					: tmp, 
+				'book_list' 			: book_list, 
+				'books' 				: books, 
+				'readed_book_count' 	: readed_book_count, 
+				'genres' 				: genres,
 		}
 	)
 

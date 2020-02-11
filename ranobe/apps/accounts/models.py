@@ -4,6 +4,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.urls import reverse
 
 # Create your models here.
 
@@ -22,6 +23,10 @@ class UserProfile(models.Model):
 
 	def __str__(self):
 		return self.user.username
+
+	def get_absolute_url(self):
+		return reverse('user-detail', args = [str(self.user.id)])
+
 
 	@receiver(post_save, sender = User)
 	def update_userprofile(instance, created, **kwargs):

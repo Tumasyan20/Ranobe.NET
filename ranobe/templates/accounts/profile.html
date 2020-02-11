@@ -1,0 +1,78 @@
+{% extends tmp %}
+
+{% block content %}
+    <div class="book-block">
+        <center>
+            <h5 class="text-secondary">Профиль пользователья: <i style="color:red;">{{ current_user.username }}</i> 
+                {% if current_user.id == user.id or user.is_staff or user.is_superuser %}
+                    <button class="edit-profile"><i class="fas fa-user-edit text-secondary" data-toggle="modal" data-target="#editProfile"></i></button>
+                {% endif %}
+             </h5>
+        </center>
+    </div>
+    <div class="book-block">
+        <div class="row">
+            <div class="col-md-4">
+                <img src="{{ current_user.userprofile.avatar.url }}" style="max-width: 200px;">  
+            </div>
+            <div class="col-md-8">
+                <h4 class="text-secondary">{{ current_user.first_name }} {{ current_user.last_name }}</h4>
+                <p class="text-secondary">Дата регистрации: <i>{{ current_user.date_joined }}</i></p>
+                <p class="text-secondary">Последний раз был на сайте: <i>{{ current_user.last_login }}</i></p>
+                <p class="text-secondary">Количество прочтенних книг: <i>{{ current_user.userprofile.readed_books.count }}</i></p>
+                
+            </div>
+        </div>
+    </div>
+    <div class="book-block" style="padding: 0;">
+        <div class="row">
+            <div class="col-md-4"><h5 data-toggle="tab" href="#reading" class="text-secondary profile-tab-button">Читаемые</h5></div>
+            <div class="col-md-4"><h5 data-toggle="tab" href="#readed" class="text-secondary profile-tab-button">Прочитанные ({{ current_user.userprofile.readed_books.count }})</h5></div>
+            <div class="col-md-4"><h5 data-toggle="tab" href="#favorite" class="text-secondary profile-tab-button" style="border-right: 3px solid #6c757d;">Любимые</h5></div>
+        </div>
+    </div>
+    <div class="book-block">
+        <div class="tab-content text-secondary">
+            <div id="reading" class="tab-pane active">
+                Функция читаемых книг находиться на стадии разработки
+            </div>
+            <div id="readed" class="tab-pane fade">
+                {% if current_user.userprofile.readed_books.count == 0 %}
+                    Данный пользователь не прочитал никаких книг
+                {% else %}
+                    Функция на стадии разработки
+                {% endif %}
+            </div>
+            <div id="favorite" class="tab-pane fade">
+                Функция любимых книг находиться на стадии разработки
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal" id="editProfile">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content {% if user.userprofile.theme == 'd' %} bg-dark {% endif %} text-secondary">
+    
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title ">Редактивировать данные</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+    
+                <!-- Modal body -->
+                <div class="modal-body">
+                    на стадии разработки
+                </div>
+    
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success">Сохранить</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Закрыть</button>
+                </div>
+    
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

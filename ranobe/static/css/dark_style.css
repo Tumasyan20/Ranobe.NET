@@ -71,6 +71,20 @@ body {
 	padding-bottom: 5px; 
 }
 
+.profile-tab-button {
+	border-left: 3px solid #6c757d;
+	padding: 10px;
+	height: 100%;
+	width: 100%;
+	cursor: pointer;
+	text-align: center;
+}
+
+.edit-profile {
+	background: none;
+	border: none;
+}
+
 aside {
 	background: #343a40;
 	margin-bottom: 10px;

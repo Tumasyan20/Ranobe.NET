@@ -62,7 +62,7 @@
 			{% endif %}
 			<p class="text-secondary"><b>Дата регистрации:</b> <i>{{ user.date_joined }}</i></p>
 			<p class="text-secondary"><b>Количество прочитанных книг:</b> <i>{{ readed_book_count }}</i></p>
-			<button class="btn btn-success">Профиль</button>
+			<a href="{{ user.userprofile.get_absolute_url }}"><button class="btn btn-success">Профиль</button></a>
 			{% if user.is_superuser or user.is_staff %}
 				<a href="/admin"><button class="btn btn-danger"><i class="fas fa-dragon"></i> Админ</button></a>
 			{% endif %}
